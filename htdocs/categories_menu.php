@@ -1,11 +1,10 @@
 <?php
 session_start();
-include "config.php"; // koneksi DB
+include "config.php"; 
 
 $loggedIn = isset($_SESSION['username']);
 $username = $loggedIn ? $_SESSION['username'] : null;
 
-// Ambil kategori & search dari URL
 $category = isset($_GET['category']) ? trim($_GET['category']) : null;
 $search   = isset($_GET['search']) ? trim($_GET['search']) : null;
 
@@ -27,7 +26,6 @@ if ($category && $search) {
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Query Best Seller
 $best = $conn->query("
     SELECT p.id, p.name, p.price, p.img, p.category, SUM(oi.quantity) AS total_sold
     FROM order_items oi
@@ -46,12 +44,10 @@ $best = $conn->query("
   <title>Categories & Menu - Aurora Patisserie</title>
   <link rel="icon" type="image/png" href="images_new/logo.png">
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- AOS Animation -->
   <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 </head>
 <body class="bg-[#fdf6f2] text-[#7b5550] font-sans">
 
-<!-- Navbar -->
 <header id="navbar" class="fixed top-0 left-0 w-full z-50 transition-colors duration-300">
   <div class="grid grid-cols-2 items-center w-full px-4 sm:px-8 py-3">
     <div class="flex items-center">
@@ -73,7 +69,6 @@ $best = $conn->query("
   </div>
 </header>
 
-<!-- Best Seller Section -->
 <section class="pt-28 pb-12 px-4 sm:px-10">
   <h2 class="text-2xl sm:text-3xl font-bold mb-8 text-center">🔥 Best Seller</h2>
   <?php if ($best->num_rows > 0): ?>
@@ -97,7 +92,6 @@ $best = $conn->query("
   <?php endif; ?>
 </section>
 
-<!-- Categories Section -->
 <section class="pb-16 px-4 sm:px-10">
   <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-center">
     <?php 
@@ -110,7 +104,6 @@ $best = $conn->query("
     ?>
   </h2>
 
-  <!-- Form Search -->
   <form action="categories_menu.php" method="get" class="flex flex-col sm:flex-row justify-center mb-10 items-center">
     <?php if ($category): ?>
       <input type="hidden" name="category" value="<?= htmlspecialchars($category) ?>">
@@ -140,7 +133,6 @@ $best = $conn->query("
   <?php endif; ?>
 </section>
 
-<!-- Scripts -->
 <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
 <script>
   AOS.init({
@@ -148,7 +140,6 @@ $best = $conn->query("
     once: false
   });
 
-  // Scroll effect untuk navbar
   window.addEventListener("scroll", function () {
     const navbar = document.getElementById("navbar");
     const links = navbar.querySelectorAll("a:not([class*='bg-'])");
