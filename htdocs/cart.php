@@ -12,7 +12,6 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// ambil isi cart
 $sql = "SELECT c.id, p.id AS product_id, p.name, p.price, p.img, c.quantity 
         FROM cart c
         JOIN products p ON c.product_id = p.id
@@ -26,7 +25,6 @@ $total = 0;
 $discount = 0;
 $promo_message = "";
 
-// hitung total
 $cart_items = [];
 while ($row = $result->fetch_assoc()) {
     $row['subtotal'] = $row['price'] * $row['quantity'];
@@ -34,7 +32,6 @@ while ($row = $result->fetch_assoc()) {
     $cart_items[] = $row;
 }
 
-// cek kode promo
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['promo_code'])) {
     $promo = trim($_POST['promo_code']);
     $check = $conn->prepare("SELECT * FROM promo_codes WHERE code = ?");
@@ -71,7 +68,6 @@ if ($grandTotal < 0) $grandTotal = 0;
 </head>
 <body class="bg-[#fdf6f2] text-[#7b5550] font-sans">
 
-<!-- Navbar -->
 <header id="navbar" class="fixed top-0 left-0 w-full z-50 transition-colors duration-300">
   <div class="grid grid-cols-2 items-center w-full px-4 sm:px-6 lg:px-10 py-3">
     <div class="flex items-center">
@@ -99,7 +95,6 @@ if ($grandTotal < 0) $grandTotal = 0;
   </div>
 </header>
 
-<!-- Cart Section -->
 <div class="pt-28 pb-20 px-4 sm:px-8 lg:px-12 max-w-5xl mx-auto">
   <h1 class="text-2xl sm:text-3xl font-bold mb-6">Keranjang Belanja</h1>
 
@@ -130,7 +125,6 @@ if ($grandTotal < 0) $grandTotal = 0;
       <?php endforeach; ?>
     </div>
 
-    <!-- Promo Code -->
     <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-between items-center">
       <form method="POST" class="flex gap-2 w-full sm:w-auto">
         <input type="text" name="promo_code" placeholder="Kode Promo" 
@@ -142,7 +136,6 @@ if ($grandTotal < 0) $grandTotal = 0;
       <?php endif; ?>
     </div>
 
-    <!-- Total -->
     <div class="text-right mt-6">
       <p class="text-lg">Subtotal: Rp<?= number_format($total, 0, ',', '.') ?></p>
       <?php if ($discount > 0): ?>
@@ -151,7 +144,6 @@ if ($grandTotal < 0) $grandTotal = 0;
       <p class="text-2xl font-bold mt-2">Total: Rp<?= number_format($grandTotal, 0, ',', '.') ?></p>
     </div>
 
-    <!-- Checkout -->
     <div class="text-right mt-6">
       <form id="checkoutForm" action="checkout.php" method="POST" target="_blank">
         <input type="hidden" name="promo_code" value="<?= isset($_POST['promo_code']) ? htmlspecialchars($_POST['promo_code']) : '' ?>">
@@ -168,7 +160,6 @@ if ($grandTotal < 0) $grandTotal = 0;
 </div>
 
 <script>
-  // Scroll effect navbar
   window.addEventListener("scroll", function () {
     const navbar = document.getElementById("navbar");
     const links = navbar.querySelectorAll("a:not([class*='bg-'])");
@@ -185,7 +176,6 @@ if ($grandTotal < 0) $grandTotal = 0;
     }
   });
 
-  // Refresh setelah checkout
   document.getElementById("checkoutForm").addEventListener("submit", function() {
     setTimeout(() => {
       window.location.reload();
