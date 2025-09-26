@@ -7,7 +7,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $comment  = trim($_POST['comment']);
     $rating   = (int)$_POST['rating'];
 
-    // pakai default profile pic
     $profile_pic = "images_new/default.png";
 
     if ($username && $comment && $rating >= 1 && $rating <= 5) {
@@ -17,7 +16,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmt->close();
     }
 
-    header("Location: index.php#reviews"); // balik ke reviews section
+    header("Location: index.php#reviews"); 
     exit;
 }
 ?>
+
